@@ -1,0 +1,73 @@
+.sync-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  justify-content: center;
+}
+
+.sync-status.synced {
+  color: #16a34a;
+  background: #f0fdf4;
+}
+
+.sync-status.syncing {
+  color: #4a6cf7;
+  background: #e8edff;
+}
+
+.sync-status.connecting {
+  color: #f59e0b;
+  background: #fffbeb;
+}
+
+.sync-status.error {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.sync-status.empty {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.sync-status.default {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.sync-icon {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.sync-text {
+  font-size: 12px;
+}
+
+/* Animasi */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+.pulsing {
+  animation: pulse 1.5s ease-in-out infinite;
+}

@@ -7,35 +7,30 @@ import TransactionList from './components/TransactionList';
 import MonthlySummary from './components/MonthlySummary';
 import PartnerBalance from './components/PartnerBalance';
 import NotificationSettings from './components/NotificationSettings';
-import useLocalStorage from './hooks/useLocalStorage';
+import SyncStatus from './components/SyncStatus';
+import useFirebase from './hooks/useFirebase';
 import useNotification from './hooks/useNotification';
 
 function App() {
-  const [transactions, setTransactions] = useLocalStorage('transactions', []);
+  const {
+    transactions,
+    loading,
+    error,
+    syncStatus,
+    addTransaction,
+    deleteTransaction
+  } = useFirebase();
+
   const [balance, setBalance] = useState({ total: 0, partner1: 0, partner2: 0 });
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const { requestPermission, isSubscribed } = useNotification();
+  const { requestPermission } = useNotification();
 
-  // Load notification preference
+  // Hitung saldo
   useEffect(() => {
-    const saved = localStorage.getItem('notificationsEnabled');
-    if (saved) {
-      setNotificationsEnabled(JSON.parse(saved));
+    if (transactions.length === 0) {
+      setBalance({ total: 0, partner1: 0, partner2: 0 });
+      return;
     }
-  }, []);
 
-  // Handle notification status change
-  const handleNotificationStatusChange = (enabled) => {
-    setNotificationsEnabled(enabled);
-    localStorage.setItem('notificationsEnabled', JSON.stringify(enabled));
-    
-    if (enabled) {
-      requestPermission();
-    }
-  };
-
-  // Hitung saldo total dan per partner
-  useEffect(() => {
     const totals = transactions.reduce((acc, transaction) => {
       const amount = transaction.type === 'income' ? transaction.amount : -transaction.amount;
       
@@ -86,21 +81,41 @@ function App() {
     return Object.keys(grouped).sort((a, b) => b.localeCompare(a)).map(key => grouped[key]);
   }, [transactions]);
 
-  const addTransaction = (transaction) => {
-    setTransactions([...transactions, transaction]);
-  };
+  if (loading) {
+    return (
+      <div className="app">
+        <div className="container">
+          <div className="loading-screen">
+            <div className="loading-spinner"></div>
+            <p>Menghubungkan ke database...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const deleteTransaction = (id) => {
-    setTransactions(transactions.filter(t => t.id !== id));
-  };
+  if (error) {
+    return (
+      <div className="app">
+        <div className="container">
+          <div className="error-screen">
+            <h3> Koneksi Gagal</h3>
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()}>Coba Lagi</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
       <div className="container">
         <Header />
+        <SyncStatus status={syncStatus} />
         <Balance balance={balance} />
         <PartnerBalance balance={balance} />
-        <NotificationSettings onNotificationStatusChange={handleNotificationStatusChange} />
+        <NotificationSettings onNotificationStatusChange={() => requestPermission()} />
         <TransactionForm onAddTransaction={addTransaction} />
         <MonthlySummary monthlyData={monthlyData} />
         <TransactionList 
