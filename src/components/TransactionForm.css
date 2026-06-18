@@ -1,0 +1,143 @@
+.transaction-form {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: border-color 0.2s;
+  outline: none;
+  background: #fafafa;
+}
+
+.form-input:focus {
+  border-color: #4a6cf7;
+  background: white;
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.type-selector,
+.partner-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.type-btn,
+.partner-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  margin-top: 4px;
+  background: white;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.type-btn:hover {
+  border-color: #4a6cf7;
+  color: #4a6cf7;
+}
+
+.type-btn.active-income {
+  border-color: #4ade80;
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.type-btn.active-expense {
+  border-color: #f87171;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.partner-btn:hover {
+  border-color: #4a6cf7;
+  color: #4a6cf7;
+}
+
+.partner-btn.active-partner1 {
+  border-color: #4a6cf7;
+  background: #e8edff;
+  color: #4a6cf7;
+}
+
+.partner-btn.active-partner2 {
+  border-color: #a855f7;
+  background: #f3e8ff;
+  color: #a855f7;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #4a6cf7 0%, #6a4cf7 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  margin-top: 12px;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.submit-btn:hover {
+  box-shadow: 0 4px 16px rgba(74, 108, 247, 0.3);
+}
+
+@media (min-width: 768px) {
+  .transaction-form {
+    padding: 24px;
+    border-radius: 20px;
+  }
+  
+  .form-row {
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .form-row .form-group {
+    flex: 1;
+  }
+  
+  .type-selector,
+  .partner-selector {
+    flex: 1;
+  }
+}

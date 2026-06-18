@@ -1,0 +1,186 @@
+.monthly-summary {
+  margin-bottom: 24px;
+}
+
+.summary-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.month-card {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.month-header {
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.month-header:active {
+  background: #f9fafb;
+}
+
+.month-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.month-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.month-total {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.month-total.positive {
+  color: #16a34a;
+}
+
+.month-total.negative {
+  color: #dc2626;
+}
+
+.month-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-count {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.month-toggle svg {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.month-details {
+  padding: 0 16px 16px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.partner-breakdown {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: 12px;
+}
+
+.breakdown-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.breakdown-icon {
+  font-size: 14px;
+}
+
+.breakdown-icon.partner1-icon {
+  color: #4a6cf7;
+}
+
+.breakdown-icon.partner2-icon {
+  color: #a855f7;
+}
+
+.breakdown-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.breakdown-amount {
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.breakdown-amount.positive {
+  color: #16a34a;
+}
+
+.breakdown-amount.negative {
+  color: #dc2626;
+}
+
+.month-transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.month-transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 13px;
+}
+
+.month-trans-desc {
+  flex: 1;
+  color: #1a1a2e;
+}
+
+.month-trans-amount {
+  font-weight: 600;
+}
+
+.month-trans-amount.income {
+  color: #16a34a;
+}
+
+.month-trans-amount.expense {
+  color: #dc2626;
+}
+
+.month-trans-partner {
+  background: #e5e7eb;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+@media (min-width: 768px) {
+  .month-card {
+    border-radius: 14px;
+  }
+  
+  .month-header {
+    padding: 16px 20px;
+  }
+  
+  .month-name {
+    font-size: 16px;
+  }
+  
+  .month-total {
+    font-size: 18px;
+  }
+}

@@ -1,0 +1,92 @@
+.partner-balance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.partner-card {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.partner-card.partner1 {
+  background: #f0f7ff;
+}
+
+.partner-card.partner2 {
+  background: #fdf0ff;
+}
+
+.partner-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.partner-icon {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.partner-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.partner-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+}
+
+.partner-amount .currency {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.partner-amount span:last-child {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.partner-amount .positive {
+  color: #16a34a;
+}
+
+.partner-amount .negative {
+  color: #dc2626;
+}
+
+.partner-divider {
+  color: #d1d5db;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .partner-balance {
+    padding: 20px 24px;
+    gap: 16px;
+    border-radius: 20px;
+  }
+  
+  .partner-card {
+    padding: 16px;
+  }
+  
+  .partner-amount span:last-child {
+    font-size: 22px;
+  }
+}

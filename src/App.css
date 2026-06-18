@@ -1,0 +1,27 @@
+.app {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding: 20px 16px 40px;
+}
+
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Mobile First - Base styles for mobile */
+@media (min-width: 768px) {
+  .app {
+    padding: 40px 24px;
+  }
+  
+  .container {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 640px;
+  }
+}
