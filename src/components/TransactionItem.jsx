@@ -1,3 +1,4 @@
+// src/components/TransactionItem.jsx
 import React from 'react';
 import { FaTrash, FaPlus, FaMinus, FaUser, FaUserFriends } from 'react-icons/fa';
 import './TransactionItem.css';
@@ -6,6 +7,17 @@ function TransactionItem({ transaction, onDelete }) {
   const { id, description, amount, type, partner, dateDisplay } = transaction;
   const isIncome = type === 'income';
   const isPartner1 = partner === 'partner1';
+
+  // Debug log
+  console.log('Transaction Item - ID:', id);
+  console.log('Transaction Item - Data:', transaction);
+
+  const handleDelete = () => {
+    console.log('Tombol hapus diklik untuk ID:', id);
+    if (window.confirm(`Apakah Anda yakin ingin menghapus transaksi "${description}"?`)) {
+      onDelete(id);
+    }
+  };
 
   return (
     <div className={`transaction-item ${isIncome ? 'income' : 'expense'}`}>
@@ -30,8 +42,9 @@ function TransactionItem({ transaction, onDelete }) {
           <span className="item-date">{dateDisplay}</span>
           <button 
             className="delete-btn"
-            onClick={() => onDelete(id)}
+            onClick={handleDelete}
             aria-label="Hapus transaksi"
+            title="Hapus transaksi"
           >
             <FaTrash />
           </button>

@@ -1,8 +1,12 @@
+// src/components/TransactionList.jsx
 import React from 'react';
 import TransactionItem from './TransactionItem';
 import './TransactionList.css';
 
 function TransactionList({ transactions, onDeleteTransaction }) {
+  console.log('TransactionList - Jumlah transaksi:', transactions.length);
+  console.log('TransactionList - Data:', transactions);
+
   if (transactions.length === 0) {
     return (
       <div className="empty-state">
@@ -13,9 +17,15 @@ function TransactionList({ transactions, onDeleteTransaction }) {
   }
 
   // Sort transactions by date (newest first)
-  const sortedTransactions = [...transactions].sort((a, b) => 
-    new Date(b.date) - new Date(a.date)
-  );
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    if (!a.date || !b.date) return 0;
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  const handleDelete = (id) => {
+    console.log('TransactionList - Menghapus ID:', id);
+    onDeleteTransaction(id);
+  };
 
   return (
     <div className="transaction-list">
@@ -25,7 +35,7 @@ function TransactionList({ transactions, onDeleteTransaction }) {
           <TransactionItem
             key={transaction.id}
             transaction={transaction}
-            onDelete={onDeleteTransaction}
+            onDelete={handleDelete}
           />
         ))}
       </div>

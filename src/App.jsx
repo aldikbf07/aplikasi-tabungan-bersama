@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import './App.css';
 import Header from './components/Header';
@@ -23,6 +24,11 @@ function App() {
 
   const [balance, setBalance] = useState({ total: 0, partner1: 0, partner2: 0 });
   const { requestPermission } = useNotification();
+
+  // Debug log
+  useEffect(() => {
+    console.log('Transaksi di App:', transactions);
+  }, [transactions]);
 
   // Hitung saldo
   useEffect(() => {
@@ -52,6 +58,11 @@ function App() {
     const grouped = {};
     
     transactions.forEach(transaction => {
+      if (!transaction.date) {
+        console.warn('Transaksi tanpa tanggal:', transaction);
+        return;
+      }
+      
       const date = new Date(transaction.date);
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       const monthName = date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
@@ -81,6 +92,18 @@ function App() {
     return Object.keys(grouped).sort((a, b) => b.localeCompare(a)).map(key => grouped[key]);
   }, [transactions]);
 
+  // Fungsi hapus dengan logging
+  const handleDelete = async (id) => {
+    console.log('App - Menghapus transaksi dengan ID:', id);
+    const result = await deleteTransaction(id);
+    if (result.success) {
+      console.log('Transaksi berhasil dihapus');
+    } else {
+      console.error('Gagal menghapus transaksi:', result.error);
+      alert('Gagal menghapus transaksi. Silakan coba lagi.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="app">
@@ -99,7 +122,7 @@ function App() {
       <div className="app">
         <div className="container">
           <div className="error-screen">
-            <h3> Koneksi Gagal</h3>
+            <h3>⚠️ Koneksi Gagal</h3>
             <p>{error}</p>
             <button onClick={() => window.location.reload()}>Coba Lagi</button>
           </div>
@@ -120,7 +143,7 @@ function App() {
         <MonthlySummary monthlyData={monthlyData} />
         <TransactionList 
           transactions={transactions} 
-          onDeleteTransaction={deleteTransaction}
+          onDeleteTransaction={handleDelete}
         />
       </div>
     </div>
