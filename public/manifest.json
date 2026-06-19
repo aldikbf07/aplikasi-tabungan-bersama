@@ -1,5 +1,5 @@
 {
-  "short_name": "nabung yi",
+  "short_name": "Nabung yi",
   "name": "nabung yi - Aplikasi Tabungan Bersama",
   "icons": [
     {
@@ -10,19 +10,16 @@
     {
       "src": "heart.png",
       "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any maskable"
+      "sizes": "192x192"
     },
     {
       "src": "heart.png",
       "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any maskable"
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#4a6cf7",
-  "background_color": "#f5f7fa",
-  "permissions": ["notifications"]
+  "background_color": "#f5f7fa"
 }

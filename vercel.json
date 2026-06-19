@@ -27,7 +27,11 @@
     },
     {
       "src": "/manifest.json",
-      "dest": "/manifest.json"
+      "dest": "/manifest.json",
+      "headers": {
+        "Cache-Control": "public, max-age=86400",
+        "Content-Type": "application/json"
+      }
     },
     {
       "src": "/favicon.ico",
