@@ -11,10 +11,26 @@
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/heart.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!-- Add fallback jika manifest error -->
+    <link rel="manifest" href="/manifest.json" />
     <title>TabunganKu - Aplikasi Tabungan Bersama</title>
   </head>
   <body>
     <noscript>Anda perlu mengaktifkan JavaScript untuk menjalankan aplikasi ini.</noscript>
     <div id="root"></div>
+    <!-- Register service worker with error handling -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+              console.log('✅ ServiceWorker registration successful:', registration);
+            })
+            .catch(function(error) {
+              console.warn('⚠️ ServiceWorker registration failed:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

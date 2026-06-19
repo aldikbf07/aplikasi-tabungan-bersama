@@ -1,14 +1,10 @@
 // public/service-worker.js
-const CACHE_NAME = 'savings-app-v3';
+const CACHE_NAME = 'savings-app-v2';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.ico',
-  '/logo192.png',
-  '/logo512.png',
-  '/heart.png',
-  '/fallback.html'
+  '/favicon.ico'
 ];
 
 // Install Service Worker
@@ -18,14 +14,18 @@ self.addEventListener('install', function(event) {
     caches.open(CACHE_NAME)
       .then(function(cache) {
         console.log('📦 Cache opened');
-        return cache.addAll(urlsToCache);
+        // Tambahkan error handling untuk setiap file
+        return Promise.all(
+          urlsToCache.map(url => {
+            return cache.add(url).catch(error => {
+              console.warn('⚠️ Failed to cache:', url, error);
+            });
+          })
+        );
       })
       .then(() => {
         console.log('✅ Service Worker installed');
         return self.skipWaiting();
-      })
-      .catch(error => {
-        console.error('❌ Cache error:', error);
       })
   );
 });
@@ -53,17 +53,58 @@ self.addEventListener('activate', function(event) {
   );
 });
 
+// Handle fetch dengan error handling yang lebih baik
+self.addEventListener('fetch', function(event) {
+  // Skip chrome-extension requests
+  if (event.request.url.startsWith('chrome-extension://')) {
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
+        }
+        
+        return fetch(event.request)
+          .then(function(response) {
+            // Cek response valid
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+            
+            // Clone response
+            const responseToCache = response.clone();
+            
+            // Cache file
+            try {
+              caches.open(CACHE_NAME)
+                .then(function(cache) {
+                  cache.put(event.request, responseToCache);
+                });
+            } catch (error) {
+              console.warn('⚠️ Failed to cache:', event.request.url, error);
+            }
+            
+            return response;
+          })
+          .catch(function(error) {
+            console.warn('⚠️ Fetch failed:', event.request.url, error);
+            // Return offline page
+            return caches.match('/index.html');
+          });
+      })
+  );
+});
+
 // Handle push notifications
 self.addEventListener('push', function(event) {
-  console.log('🔔 Push notification received');
-  
   let data = {
-    title: 'Nabung yuh seng',
+    title: '💰 TabunganKu',
     body: 'Jangan lupa menabung hari ini!',
-    icon: '/heart.png',
-    badge: '/heart.png',
-    vibrate: [200, 100, 200],
-    requireInteraction: true
+    icon: '/logo192.png',
+    badge: '/favicon.ico'
   };
 
   if (event.data) {
@@ -80,12 +121,8 @@ self.addEventListener('push', function(event) {
       body: data.body,
       icon: data.icon,
       badge: data.badge,
-      vibrate: data.vibrate,
-      requireInteraction: data.requireInteraction,
-      actions: [
-        { action: 'open', title: 'Buka Aplikasi' },
-        { action: 'close', title: 'Tutup' }
-      ]
+      vibrate: [200, 100, 200],
+      requireInteraction: true
     })
   );
 });
@@ -94,10 +131,6 @@ self.addEventListener('push', function(event) {
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   
-  if (event.action === 'close') {
-    return;
-  }
-
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then(function(clientList) {
@@ -109,36 +142,6 @@ self.addEventListener('notificationclick', function(event) {
         if (clients.openWindow) {
           return clients.openWindow('/');
         }
-      })
-  );
-});
-
-// Handle fetch
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        if (response) {
-          return response;
-        }
-        
-        return fetch(event.request)
-          .then(function(response) {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME)
-              .then(function(cache) {
-                cache.put(event.request, responseToCache);
-              });
-            
-            return response;
-          })
-          .catch(function() {
-            return caches.match('/fallback.html');
-          });
       })
   );
 });
