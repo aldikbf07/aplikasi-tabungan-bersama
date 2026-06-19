@@ -5,7 +5,16 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build"
+        "distDir": "build",
+        "env": {
+          "REACT_APP_FIREBASE_API_KEY": "AIzaSyChs00RtvQrVM_skrVrzW9t5FCOFBOyR9E",
+          "REACT_APP_FIREBASE_AUTH_DOMAIN": "savings-app-a6cf0.firebaseapp.com",
+          "REACT_APP_FIREBASE_DATABASE_URL": "https://savings-app-a6cf0-default-rtdb.asia-southeast1.firebasedatabase.app",
+          "REACT_APP_FIREBASE_PROJECT_ID": "savings-app-a6cf0",
+          "REACT_APP_FIREBASE_STORAGE_BUCKET": "savings-app-a6cf0.firebasestorage.app",
+          "REACT_APP_FIREBASE_MESSAGING_SENDER_ID": "510493395456",
+          "REACT_APP_FIREBASE_APP_ID": "1:510493395456:web:2841cb9d15605c41a766e5"
+        }
       }
     }
   ],
@@ -15,63 +24,12 @@
       "dest": "/service-worker.js",
       "headers": {
         "Cache-Control": "public, max-age=0, must-revalidate",
-        "Service-Worker-Allowed": "/",
-        "Content-Type": "application/javascript"
+        "Service-Worker-Allowed": "/"
       }
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/manifest.json",
-      "headers": {
-        "Cache-Control": "public, max-age=3600",
-        "Content-Type": "application/json"
-      }
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico",
-      "headers": {
-        "Cache-Control": "public, max-age=86400"
-      }
-    },
-
-    {
-      "src": "/logo192.png",
-      "dest": "/logo192.png",
-      "headers": {
-        "Cache-Control": "public, max-age=86400"
-      }
-    },
-        {
-      "src": "/heart.png",
-      "dest": "/heart.png",
-      "headers": {
-        "Cache-Control": "public, max-age=86400"
-      }
-    },
-    {
-      "src": "/logo512.png",
-      "dest": "/logo512.png",
-      "headers": {
-        "Cache-Control": "public, max-age=86400"
-      }
-    },
-    {
-      "src": "/fallback.html",
-      "dest": "/fallback.html"
     },
     {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "REACT_APP_FIREBASE_API_KEY": "@firebase_api_key",
-    "REACT_APP_FIREBASE_AUTH_DOMAIN": "@firebase_auth_domain",
-    "REACT_APP_FIREBASE_DATABASE_URL": "@firebase_database_url",
-    "REACT_APP_FIREBASE_PROJECT_ID": "@firebase_project_id",
-    "REACT_APP_FIREBASE_STORAGE_BUCKET": "@firebase_storage_bucket",
-    "REACT_APP_FIREBASE_MESSAGING_SENDER_ID": "@firebase_messaging_sender_id",
-    "REACT_APP_FIREBASE_APP_ID": "@firebase_app_id"
-  }
+  ]
 }
