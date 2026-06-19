@@ -108,7 +108,7 @@ function TransactionForm({ onAddTransaction }) {
             className={`partner-btn ${partner === 'partner2' ? 'active-partner2' : ''}`}
             onClick={() => setPartner('partner2')}
           >
-            <FaUserFriends /> Dina cantik
+            <FaUser /> Dina cantik
           </button>
         </div>
       </div>

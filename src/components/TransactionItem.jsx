@@ -33,8 +33,8 @@ function TransactionItem({ transaction, onDelete }) {
           <div className="item-title">
             <span className="item-description">{description}</span>
             <span className={`item-partner ${isPartner1 ? 'partner1' : 'partner2'}`}>
-              {isPartner1 ? <FaUser /> : <FaUserFriends />}
-              {isPartner1 ? 'P1' : 'P2'}
+              {isPartner1 ? <FaUser /> : <FaUser />}
+              {isPartner1 ? 'ayi' : 'oyun'}
             </span>
           </div>
           <span className={`item-amount ${isIncome ? 'income' : 'expense'}`}>
