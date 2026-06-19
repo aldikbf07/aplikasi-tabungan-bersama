@@ -1,10 +1,12 @@
 // public/service-worker.js
-const CACHE_NAME = 'savings-app-v2';
+const CACHE_NAME = 'savings-app-v3';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.ico'
+  '/favicon.ico',
+  '/logo192.png',
+  '/logo512.png'
 ];
 
 // Install Service Worker
@@ -14,14 +16,9 @@ self.addEventListener('install', function(event) {
     caches.open(CACHE_NAME)
       .then(function(cache) {
         console.log('📦 Cache opened');
-        // Tambahkan error handling untuk setiap file
-        return Promise.all(
-          urlsToCache.map(url => {
-            return cache.add(url).catch(error => {
-              console.warn('⚠️ Failed to cache:', url, error);
-            });
-          })
-        );
+        return cache.addAll(urlsToCache).catch(error => {
+          console.warn('⚠️ Some files failed to cache:', error);
+        });
       })
       .then(() => {
         console.log('✅ Service Worker installed');
@@ -53,7 +50,7 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// Handle fetch dengan error handling yang lebih baik
+// Handle fetch
 self.addEventListener('fetch', function(event) {
   // Skip chrome-extension requests
   if (event.request.url.startsWith('chrome-extension://')) {
@@ -69,29 +66,23 @@ self.addEventListener('fetch', function(event) {
         
         return fetch(event.request)
           .then(function(response) {
-            // Cek response valid
-            if (!response || response.status !== 200 || response.type !== 'basic') {
+            if (!response || response.status !== 200) {
               return response;
             }
             
-            // Clone response
             const responseToCache = response.clone();
-            
-            // Cache file
-            try {
-              caches.open(CACHE_NAME)
-                .then(function(cache) {
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                try {
                   cache.put(event.request, responseToCache);
-                });
-            } catch (error) {
-              console.warn('⚠️ Failed to cache:', event.request.url, error);
-            }
+                } catch (error) {
+                  console.warn('⚠️ Failed to cache:', event.request.url);
+                }
+              });
             
             return response;
           })
-          .catch(function(error) {
-            console.warn('⚠️ Fetch failed:', event.request.url, error);
-            // Return offline page
+          .catch(function() {
             return caches.match('/index.html');
           });
       })

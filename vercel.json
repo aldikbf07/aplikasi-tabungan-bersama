@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "aplikasi-tabungan-bersama",
   "builds": [
     {
       "src": "package.json",
@@ -11,19 +12,14 @@
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
       "src": "/service-worker.js",
       "dest": "/service-worker.js",
       "headers": {
-        "Cache-Control": "public, max-age=0, must-revalidate",
-        "Service-Worker-Allowed": "/"
-      }
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/manifest.json",
-      "headers": {
-        "Cache-Control": "public, max-age=3600",
-        "Content-Type": "application/json"
+        "Cache-Control": "public, max-age=0, must-revalidate"
       }
     },
     {
