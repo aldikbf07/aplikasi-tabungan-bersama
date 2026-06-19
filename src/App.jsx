@@ -19,15 +19,18 @@ function App() {
     error,
     syncStatus,
     addTransaction,
-    deleteTransaction
+    deleteTransaction,
+    forceSync
   } = useFirebase();
 
   const [balance, setBalance] = useState({ total: 0, partner1: 0, partner2: 0 });
   const { requestPermission } = useNotification();
 
+
   // Debug log
   useEffect(() => {
-    console.log('Transaksi di App:', transactions);
+    console.log('📊 App - Transaksi:', transactions);
+    console.log('📊 App - ID transaksi:', transactions.map(t => ({ id: t.id, firebaseId: t.firebaseId, desc: t.description })));
   }, [transactions]);
 
   // Hitung saldo
@@ -59,7 +62,7 @@ function App() {
     
     transactions.forEach(transaction => {
       if (!transaction.date) {
-        console.warn('Transaksi tanpa tanggal:', transaction);
+        console.warn('⚠️ Transaksi tanpa tanggal:', transaction);
         return;
       }
       
@@ -92,15 +95,31 @@ function App() {
     return Object.keys(grouped).sort((a, b) => b.localeCompare(a)).map(key => grouped[key]);
   }, [transactions]);
 
-  // Fungsi hapus dengan logging
+  // Fungsi hapus dengan logging detail
   const handleDelete = async (id) => {
-    console.log('App - Menghapus transaksi dengan ID:', id);
+    console.log('🗑️ App - Menerima permintaan hapus untuk ID:', id);
+    console.log('📊 App - ID yang diterima:', typeof id, id);
+    
+    // Cari transaksi di state
+    const found = transactions.find(t => t.id === id || t.firebaseId === id);
+    console.log('🔍 App - Transaksi ditemukan:', found);
+    
+    if (!found) {
+      console.error('❌ App - Transaksi tidak ditemukan di state');
+      alert('Transaksi tidak ditemukan. Silakan refresh halaman.');
+      return;
+    }
+
     const result = await deleteTransaction(id);
     if (result.success) {
-      console.log('Transaksi berhasil dihapus');
+      console.log('✅ Transaksi berhasil dihapus');
+      // Force sync setelah hapus
+      setTimeout(async () => {
+        await forceSync();
+      }, 500);
     } else {
-      console.error('Gagal menghapus transaksi:', result.error);
-      alert('Gagal menghapus transaksi. Silakan coba lagi.');
+      console.error('❌ Gagal menghapus transaksi:', result.error);
+      alert(`Gagal menghapus transaksi: ${result.error}`);
     }
   };
 
@@ -138,7 +157,7 @@ function App() {
         <SyncStatus status={syncStatus} />
         <Balance balance={balance} />
         <PartnerBalance balance={balance} />
-        <NotificationSettings onNotificationStatusChange={() => requestPermission()} />
+        <NotificationSettings onNotificationStatusChange={() => {}} />
         <TransactionForm onAddTransaction={addTransaction} />
         <MonthlySummary monthlyData={monthlyData} />
         <TransactionList 

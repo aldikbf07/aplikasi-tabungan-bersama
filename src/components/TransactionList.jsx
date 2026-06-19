@@ -4,8 +4,8 @@ import TransactionItem from './TransactionItem';
 import './TransactionList.css';
 
 function TransactionList({ transactions, onDeleteTransaction }) {
-  console.log('TransactionList - Jumlah transaksi:', transactions.length);
-  console.log('TransactionList - Data:', transactions);
+  console.log('📊 TransactionList - Jumlah transaksi:', transactions.length);
+  console.log('📊 TransactionList - Data:', transactions);
 
   if (transactions.length === 0) {
     return (
@@ -23,7 +23,8 @@ function TransactionList({ transactions, onDeleteTransaction }) {
   });
 
   const handleDelete = (id) => {
-    console.log('TransactionList - Menghapus ID:', id);
+    console.log('🗑️ TransactionList - Menghapus ID:', id);
+    console.log('📊 Transactions saat ini:', transactions.map(t => ({ id: t.id, firebaseId: t.firebaseId, desc: t.description })));
     onDeleteTransaction(id);
   };
 
@@ -33,7 +34,7 @@ function TransactionList({ transactions, onDeleteTransaction }) {
       <div className="list-items">
         {sortedTransactions.map(transaction => (
           <TransactionItem
-            key={transaction.id}
+            key={transaction.id || transaction.firebaseId}
             transaction={transaction}
             onDelete={handleDelete}
           />

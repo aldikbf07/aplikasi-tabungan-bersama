@@ -1,14 +1,20 @@
+/* src/components/NotificationSettings.css */
 .notification-settings {
   background: white;
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.notification-settings:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .notification-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   margin-bottom: 14px;
 }
@@ -21,33 +27,97 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  background: #f3f4f6;
+  transition: all 0.3s ease;
 }
 
 .notification-icon-wrapper .icon-enabled {
-  font-size: 22px;
+  font-size: 24px;
   color: #4a6cf7;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .notification-icon-wrapper .icon-disabled {
-  font-size: 22px;
+  font-size: 24px;
   color: #9ca3af;
 }
 
 .notification-info {
   flex: 1;
+  min-width: 0;
 }
 
 .notification-title {
   font-size: 15px;
   font-weight: 600;
   color: #1a1a2e;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .notification-subtitle {
   font-size: 13px;
   color: #6b7280;
-  line-height: 1.4;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.subtitle-icon {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.subtitle-icon.success {
+  color: #16a34a;
+}
+
+.notification-error {
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fef2f2;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.error-icon {
+  font-size: 12px;
+}
+
+.notification-test-success {
+  font-size: 12px;
+  color: #16a34a;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f0fdf4;
+  padding: 4px 8px;
+  border-radius: 6px;
+  animation: slideIn 0.3s ease;
+}
+
+.notification-test-error {
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fef2f2;
+  padding: 4px 8px;
+  border-radius: 6px;
+  animation: slideIn 0.3s ease;
+}
+
+.success-icon {
+  font-size: 12px;
+  color: #16a34a;
 }
 
 .notification-actions {
@@ -57,7 +127,7 @@
 
 .btn-enable {
   width: 100%;
-  padding: 12px;
+  padding: 12px 16px;
   background: linear-gradient(135deg, #4a6cf7 0%, #6a4cf7 100%);
   color: white;
   border: none;
@@ -65,7 +135,7 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.2s;
+  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,32 +146,78 @@
   transform: scale(0.98);
 }
 
-.btn-enable:hover {
+.btn-enable:hover:not(:disabled) {
   box-shadow: 0 4px 16px rgba(74, 108, 247, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-enable:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .notification-status {
   width: 100%;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .status-active {
-  flex: 1;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px;
+  padding: 10px 12px;
   background: #f0fdf4;
   border-radius: 12px;
   color: #16a34a;
   font-weight: 600;
   font-size: 14px;
+  justify-content: center;
+  border: 2px solid #bbf7d0;
+}
+
+.status-icon {
+  font-size: 16px;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-test {
+  flex: 1;
+  padding: 10px 12px;
+  background: #eff6ff;
+  color: #4a6cf7;
+  border: 2px solid #bfdbfe;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-test:hover:not(:disabled) {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+}
+
+.btn-test:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .btn-disable {
-  padding: 12px 20px;
+  flex: 1;
+  padding: 10px 12px;
   background: #fef2f2;
   color: #dc2626;
   border: 2px solid #fecaca;
@@ -110,39 +226,78 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.btn-disable:active {
-  transform: scale(0.98);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .btn-disable:hover {
   background: #fee2e2;
+  border-color: #fca5a5;
+  transform: translateY(-1px);
 }
 
 .notification-info-box {
   margin-top: 12px;
-  padding: 12px;
-  background: #f0f7ff;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e8edff 100%);
   border-radius: 10px;
   border-left: 3px solid #4a6cf7;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-icon {
+  font-size: 16px;
+  color: #4a6cf7;
+  min-width: 24px;
 }
 
 .info-text {
   font-size: 13px;
-  color: #4a6cf7;
-  margin-bottom: 4px;
+  color: #1a1a2e;
   line-height: 1.5;
 }
 
-.info-text:last-child {
-  margin-bottom: 0;
+/* Animations */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive */
 @media (min-width: 768px) {
   .notification-settings {
-    padding: 20px;
+    padding: 20px 24px;
     border-radius: 20px;
   }
   
@@ -153,6 +308,50 @@
   
   .notification-icon-wrapper .icon-enabled,
   .notification-icon-wrapper .icon-disabled {
-    font-size: 26px;
+    font-size: 28px;
+  }
+  
+  .notification-status {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .status-active {
+    flex: 1;
+    margin-bottom: 0;
+    padding: 12px 16px;
+  }
+  
+  .notification-title {
+    font-size: 16px;
+  }
+  
+  .notification-subtitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-settings {
+    padding: 14px;
+  }
+  
+  .status-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-test,
+  .btn-disable {
+    width: 100%;
+  }
+  
+  .notification-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .notification-icon-wrapper .icon-enabled,
+  .notification-icon-wrapper .icon-disabled {
+    font-size: 20px;
   }
 }

@@ -9,11 +9,14 @@ function TransactionItem({ transaction, onDelete }) {
   const isPartner1 = partner === 'partner1';
 
   // Debug log
-  console.log('Transaction Item - ID:', id);
-  console.log('Transaction Item - Data:', transaction);
+  console.log('📦 Transaction Item - Data:', transaction);
+  console.log('🆔 Transaction Item - ID:', id);
 
   const handleDelete = () => {
-    console.log('Tombol hapus diklik untuk ID:', id);
+    console.log('🖱️ Tombol hapus diklik untuk transaksi:', description);
+    console.log('🆔 ID yang akan dihapus:', id);
+    
+    // Konfirmasi dengan nama transaksi
     if (window.confirm(`Apakah Anda yakin ingin menghapus transaksi "${description}"?`)) {
       onDelete(id);
     }
@@ -31,7 +34,7 @@ function TransactionItem({ transaction, onDelete }) {
             <span className="item-description">{description}</span>
             <span className={`item-partner ${isPartner1 ? 'partner1' : 'partner2'}`}>
               {isPartner1 ? <FaUser /> : <FaUserFriends />}
-              {isPartner1 ? 'ayi' : 'oyun'}
+              {isPartner1 ? 'P1' : 'P2'}
             </span>
           </div>
           <span className={`item-amount ${isIncome ? 'income' : 'expense'}`}>

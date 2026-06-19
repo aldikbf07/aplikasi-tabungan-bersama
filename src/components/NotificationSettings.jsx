@@ -1,75 +1,151 @@
+// src/components/NotificationSettings.jsx
 import React, { useState, useEffect } from 'react';
-import { FaBell, FaBellSlash, FaCheckCircle,FaCalendarAlt  } from 'react-icons/fa';
-import { IoMdAlarm } from "react-icons/io";
+import { 
+  FaBell, 
+  FaBellSlash, 
+  FaCheckCircle, 
+  FaExclamationTriangle,
+  FaClock,
+  FaMobile,
+  FaRegBell,
+  FaRegCheckCircle,
+  FaSpinner,
+  FaSync,
+  FaTimes
+} from 'react-icons/fa';
+import { MdNotificationsActive, MdNotificationsOff } from 'react-icons/md';
+import { BiTime, BiMobile } from 'react-icons/bi';
+import { HiOutlineBell, HiOutlineBellAlert } from 'react-icons/hi';
+import useNotification from '../hooks/useNotification';
 import './NotificationSettings.css';
 
 function NotificationSettings({ onNotificationStatusChange }) {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [permission, setPermission] = useState('default');
+  const [loading, setLoading] = useState(false);
+  const [showTestResult, setShowTestResult] = useState(null);
+  const {
+    permission,
+    requestPermission,
+    testNotification,
+    disableNotifications,
+    error
+  } = useNotification();
 
   useEffect(() => {
-    if ('Notification' in window) {
-      setPermission(Notification.permission);
-      setIsEnabled(Notification.permission === 'granted');
+    const saved = localStorage.getItem('notificationsEnabled');
+    const savedStatus = saved ? JSON.parse(saved) : false;
+    
+    if (permission === 'granted' && savedStatus) {
+      setIsEnabled(true);
+      onNotificationStatusChange(true);
+    } else if (permission === 'denied') {
+      setIsEnabled(false);
+      onNotificationStatusChange(false);
+    } else {
+      setIsEnabled(savedStatus);
     }
-  }, []);
+  }, [permission, onNotificationStatusChange]);
 
   const handleEnableNotifications = async () => {
-    if (!('Notification' in window)) {
-      alert('Browser Anda tidak mendukung notifikasi. Gunakan Chrome, Firefox, atau Edge terbaru.');
-      return;
-    }
-
+    setLoading(true);
+    setShowTestResult(null);
     try {
-      const permission = await Notification.requestPermission();
-      setPermission(permission);
+      const success = await requestPermission();
       
-      if (permission === 'granted') {
+      if (success) {
         setIsEnabled(true);
+        localStorage.setItem('notificationsEnabled', 'true');
         onNotificationStatusChange(true);
         
-        // Register service worker
-        if ('serviceWorker' in navigator) {
-          try {
-            await navigator.serviceWorker.register('/service-worker.js');
-          } catch (error) {
-            console.error('Service Worker registration failed:', error);
-          }
-        }
-
-        // Send welcome notification
-        new Notification('✅ Notifikasi Diaktifkan!', {
-          body: 'Kamu akan mendapat pengingat untuk menabung setiap hari Jumat.',
-          icon: '/favicon.ico'
-        });
+        setTimeout(() => {
+          const result = testNotification();
+          setShowTestResult(result ? 'success' : 'error');
+          setTimeout(() => setShowTestResult(null), 5000);
+        }, 2000);
       } else {
-        alert('Anda perlu mengizinkan notifikasi untuk menggunakan fitur ini.');
+        setIsEnabled(false);
+        localStorage.setItem('notificationsEnabled', 'false');
+        onNotificationStatusChange(false);
+        setShowTestResult('error');
+        setTimeout(() => setShowTestResult(null), 5000);
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Terjadi kesalahan. Silakan coba lagi.');
+      console.error('❌ Error enabling notifications:', error);
+      setShowTestResult('error');
+      setTimeout(() => setShowTestResult(null), 5000);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDisableNotifications = () => {
     setIsEnabled(false);
+    localStorage.setItem('notificationsEnabled', 'false');
     onNotificationStatusChange(false);
-    alert('Notifikasi dinonaktifkan. Untuk mengaktifkan kembali, atur ulang izin notifikasi di pengaturan browser.');
+    disableNotifications();
+    setShowTestResult(null);
+  };
+
+  const handleTestNotification = () => {
+    if (isEnabled && permission === 'granted') {
+      const result = testNotification();
+      setShowTestResult(result ? 'success' : 'error');
+      setTimeout(() => setShowTestResult(null), 5000);
+    } else {
+      setShowTestResult('error');
+      setTimeout(() => setShowTestResult(null), 5000);
+    }
   };
 
   return (
     <div className="notification-settings">
       <div className="notification-header">
         <div className="notification-icon-wrapper">
-          {isEnabled ? <FaBell className="icon-enabled" /> : <FaBellSlash className="icon-disabled" />}
+          {isEnabled ? (
+            <MdNotificationsActive className="icon-enabled" />
+          ) : (
+            <MdNotificationsOff className="icon-disabled" />
+          )}
         </div>
         <div className="notification-info">
           <h4 className="notification-title">Pengingat Menabung</h4>
           <p className="notification-subtitle">
-            {isEnabled 
-              ? 'Notifikasi aktif - akan aku ingetin tiap jumat' 
-              : 'kalo kamu mau diingetin buat nabung, aktifin notifikasi dulu yaa'}
+            {isEnabled ? (
+              <>
+                <FaRegCheckCircle className="subtitle-icon success" />
+                Notifikasi aktif - akan mengingatkan setiap hari Jumat
+              </>
+            ) : (
+              <>
+                <HiOutlineBell className="subtitle-icon" />
+                Aktifkan notifikasi untuk pengingat menabung setiap hari Jumat
+              </>
+            )}
           </p>
+          {error && (
+            <p className="notification-error">
+              <FaExclamationTriangle className="error-icon" />
+              {error}
+            </p>
+          )}
+          {permission === 'denied' && (
+            <p className="notification-error">
+              <FaExclamationTriangle className="error-icon" />
+              Izin notifikasi ditolak. Atur ulang di pengaturan browser.
+            </p>
+          )}
+          {showTestResult === 'success' && (
+            <p className="notification-test-success">
+              <FaCheckCircle className="success-icon" />
+              Notifikasi berhasil dikirim! ✅
+            </p>
+          )}
+          {showTestResult === 'error' && (
+            <p className="notification-test-error">
+              <FaTimes className="error-icon" />
+              Gagal mengirim notifikasi. Periksa izin browser.
+            </p>
+          )}
         </div>
       </div>
 
@@ -78,32 +154,55 @@ function NotificationSettings({ onNotificationStatusChange }) {
           <button 
             className="btn-enable" 
             onClick={handleEnableNotifications}
+            disabled={loading || permission === 'denied'}
           >
-            <FaBell /> Aktifkan Notifikasi
+            {loading ? (
+              <><FaSpinner className="spinning" /> Memproses...</>
+            ) : (
+              <><FaBell /> Aktifkan Notifikasi</>
+            )}
           </button>
         ) : (
           <div className="notification-status">
             <span className="status-active">
-              <FaCheckCircle /> Notifikasi Aktif
+              <FaCheckCircle className="status-icon" />
+              Notifikasi Aktif
             </span>
-            <button 
-              className="btn-disable" 
-              onClick={handleDisableNotifications}
-            >
-              Nonaktifkan
-            </button>
+            <div className="status-buttons">
+              <button 
+                className="btn-test" 
+                onClick={handleTestNotification}
+                disabled={loading}
+              >
+                <FaSync className={loading ? 'spinning' : ''} />
+                Test
+              </button>
+              <button 
+                className="btn-disable" 
+                onClick={handleDisableNotifications}
+              >
+                <FaTimes />
+                Nonaktifkan
+              </button>
+            </div>
           </div>
         )}
       </div>
 
       {isEnabled && (
         <div className="notification-info-box">
-          <p className="info-text">
-            <IoMdAlarm /> Pengingat akan muncul setiap hari Jumat mulai pukul 07:00 - 21:00
-          </p>
-          <p className="info-text">
-            <FaCalendarAlt /> Jangan lupa catat tabungan kita ya beb!
-          </p>
+          <div className="info-item">
+            <BiTime className="info-icon" />
+            <span className="info-text">Pengingat muncul setiap Jumat pukul 07:00 - 21:00</span>
+          </div>
+          <div className="info-item">
+            <BiMobile className="info-icon" />
+            <span className="info-text">Notifikasi akan muncul meskipun aplikasi tertutup</span>
+          </div>
+          <div className="info-item">
+            <FaRegBell className="info-icon" />
+            <span className="info-text">Klik notifikasi untuk membuka aplikasi</span>
+          </div>
         </div>
       )}
     </div>
